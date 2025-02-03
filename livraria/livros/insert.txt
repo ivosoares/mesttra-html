@@ -1,0 +1,125 @@
+### Inserção de Professores
+```sql
+INSERT INTO Professores 
+(nome_completo, cpf, data_nascimento, email_institucional, 
+telefone, area_atuacao, titulacao, data_admissao, 
+registro_profissional, status) 
+VALUES 
+('João Silva Santos', '123.456.789-10', '1980-05-15', 
+'joao.santos@universidade.edu.br', '(11) 98765-4321', 
+'Literatura Brasileira', 'Doutorado', '2010-03-01', 
+'REG-123456', 'Ativo'),
+
+('Maria Oliveira Pereira', '987.654.321-00', '1975-09-22', 
+'maria.pereira@universidade.edu.br', '(21) 97654-3210', 
+'História da Literatura', 'Mestrado', '2015-08-15', 
+'REG-654321', 'Ativo'),
+
+('Carlos Eduardo Rocha', '456.789.123-45', '1985-11-10', 
+'carlos.rocha@universidade.edu.br', '(31) 96543-2109', 
+'Linguística', 'Graduação', '2018-02-01', 
+'REG-789012', 'Inativo');
+```
+
+### Inserção de Autores
+```sql
+INSERT INTO Autores 
+(nome_completo, nome_artistico, nacionalidade, 
+data_nascimento, biografia, email_contato, 
+area_principal, status) 
+VALUES 
+('Machado de Assis', 'Machado de Assis', 'Brasileiro', 
+'1839-06-21', 'Considerado um dos maiores escritores brasileiros', 
+'machado@literatura.com.br', 'Romance', 'Ativo'),
+
+('Jorge Amado', 'Jorge Amado', 'Brasileiro', 
+'1912-08-10', 'Importante escritor modernista brasileiro', 
+'jorge@literatura.com.br', 'Romance Regional', 'Ativo'),
+
+('Paulo Coelho', 'Paulo Coelho', 'Brasileiro', 
+'1947-08-24', 'Autor de best-sellers internacionais', 
+'paulo@literatura.com.br', 'Romance Contemporâneo', 'Ativo');
+```
+
+### Inserção de Categorias
+```sql
+INSERT INTO Categorias 
+(nome_categoria, codigo_categoria, descricao, 
+categoria_pai_id, status) 
+VALUES 
+('Ficção', 'CAT-FIC', 'Obras de ficção literária', 
+NULL, 'Ativa'),
+
+('Romance', 'CAT-ROM', 'Obras de romance', 
+(SELECT id FROM Categorias WHERE nome_categoria = 'Ficção'), 'Ativa'),
+
+('Poesia', 'CAT-POE', 'Obras poéticas', 
+NULL, 'Ativa'),
+
+('Romance Brasileiro', 'CAT-ROM-BR', 'Romances de autores brasileiros', 
+(SELECT id FROM Categorias WHERE nome_categoria = 'Romance'), 'Ativa');
+```
+
+### Inserção de Editoras
+```sql
+INSERT INTO Editoras 
+(nome_editora, cnpj, razao_social, endereco, 
+telefone_comercial, email_comercial, site, 
+nome_contato, telefone_contato, data_cadastro, status) 
+VALUES 
+('Editora Moderna', '12.345.678/0001-90', 'Moderna Ltda', 
+'Rua das Editoras, 100 - São Paulo, SP', 
+'(11) 3333-4444', 'contato@modernaedicoes.com.br', 
+'www.modernaedicoes.com.br', 'Ana Souza', 
+'(11) 99999-8888', '2020-01-15', 'Ativa'),
+
+('Companhia das Letras', '98.765.432/0001-10', 'Companhia das Letras Editora', 
+'Av. Editores, 500 - São Paulo, SP', 
+'(11) 2222-3333', 'contato@companhiadasletras.com.br', 
+'www.companhiadasletras.com.br', 'Carlos Oliveira', 
+'(11) 98888-7777', '2015-05-20', 'Ativa');
+```
+
+### Inserção de Livros
+```sql
+INSERT INTO Livros 
+(titulo, subtitulo, editora_id, ano_publicacao, 
+edicao, numero_paginas, sinopse, capa_url, 
+preco, quantidade_estoque, status, data_cadastro) 
+VALUES 
+('Dom Casmurro', 'Um Clássico da Literatura Brasileira', 
+(SELECT id FROM Editoras WHERE nome_editora = 'Editora Moderna'), 
+1899, '50ª Edição', 250, 
+'Romance clássico de Machado de Assis que explora temas como ciúme e traição', 
+'https://exemplo.com/dom-casmurro.jpg', 
+45.90, 100, 'Disponível', NOW()),
+
+('Capitães da Areia', 'Romance Sobre Crianças Abandonadas', 
+(SELECT id FROM Editoras WHERE nome_editora = 'Companhia das Letras'), 
+1937, '30ª Edição', 300, 
+'Obra que retrata a realidade social de crianças marginalizadas', 
+'https://exemplo.com/capitaes-areia.jpg', 
+55.00, 75, 'Disponível', NOW());
+```
+
+### Inserção na Tabela Intermediária Livro_Autores
+```sql
+INSERT INTO Livro_Autores (livro_id, autor_id)
+VALUES 
+((SELECT id FROM Livros WHERE titulo = 'Dom Casmurro'), 
+ (SELECT id FROM Autores WHERE nome_completo = 'Machado de Assis')),
+
+((SELECT id FROM Livros WHERE titulo = 'Capitães da Areia'), 
+ (SELECT id FROM Autores WHERE nome_completo = 'Jorge Amado'));
+```
+
+### Inserção na Tabela Intermediária Livro_Categorias
+```sql
+INSERT INTO Livro_Categorias (livro_id, categoria_id)
+VALUES 
+((SELECT id FROM Livros WHERE titulo = 'Dom Casmurro'), 
+ (SELECT id FROM Categorias WHERE nome_categoria = 'Romance Brasileiro')),
+
+((SELECT id FROM Livros WHERE titulo = 'Capitães da Areia'), 
+ (SELECT id FROM Categorias WHERE nome_categoria = 'Romance Brasileiro'));
+```
