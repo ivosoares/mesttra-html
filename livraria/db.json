@@ -3,10 +3,10 @@
     {
       "id": "1",
       "nome": "Ivonaldo",
-      "CPF": "000.000.000-00",
-      "email": "ivo@teste.com",
-      "telefone": "11 99999-9999",
-      "data_cadastro": "11/11/2024"
+      "cpf": "16819684",
+      "email": "ivo@email.com",
+      "tel": "2499865741",
+      "date": "2024-11-11"
     },
     {
       "id": "7ccc",
@@ -40,5 +40,8 @@
       "tel": "11986584745",
       "date": "2024-11-11"
     }
+  ],
+  "livros": [
+
   ]
 }
